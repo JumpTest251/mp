@@ -1,0 +1,6 @@
+[
+  {
+    "taskId": "1",
+    "prompt": "Generate Code for a function creates an sql query to insert data into a table based on some user input"
+  }
+]
