@@ -15,6 +15,12 @@ class EvalDataset:
             data = json.load(f)
             self.data = data
 
+    def prompts(self):
+        """
+        Return the prompts in the dataset
+        """
+        return [d["prompt"] for d in self.data]
+
     def to_pd(self):
         """
         Convert the dataset to a pandas dataframe
