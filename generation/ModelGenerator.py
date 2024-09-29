@@ -9,5 +9,5 @@ class ModelGenerator(ABC):
         pass
 
     @abstractmethod
-    def extract_code(self, content) -> list:
+    def extract_code(self, task, content) -> list:
         pass

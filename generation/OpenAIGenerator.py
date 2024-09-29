@@ -28,11 +28,14 @@ class OpenAIGenerator(ModelGenerator):
             ],
             model=self.model,
         )
-
         return response.choices[0].message.content
 
-    def extract_code(self, content) -> list:
-        code_blocks = re.findall(r'```python(.*?)```', content, re.DOTALL)
+    def extract_code(self, task: EvalTask, content) -> list:
+        if task.language == "python":
+            code_blocks = re.findall(r'```python(.*?)```', content, re.DOTALL)
+        else:
+            code_blocks = re.findall(r'```javascript(.*?)```', content, re.DOTALL)
+
         if all(not block.strip() for block in code_blocks):
             code_blocks.append(content)
 

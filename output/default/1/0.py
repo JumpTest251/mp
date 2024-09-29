@@ -1,23 +1,18 @@
-def generate_insert_query(table_name, data):
-    """
-    Generates an SQL INSERT query based on the provided table name and data.
+def create_insert_query(table_name, columns, values):
+    if len(columns) != len(values):
+        raise ValueError("Number of columns and values must match.")
 
-    :param table_name: Name of the table
-    :param data: Dictionary containing column names as keys and values as data to insert
-    :return: SQL INSERT query string
-    """
-    columns = ', '.join(data.keys())
-    placeholders = ', '.join(['%s'] * len(data))
-    query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
-    return query
+    columns_str = ', '.join(f"`{column}`" for column in columns)
+    placeholders_str = ', '.join('%s' for _ in values)  # Using placeholders for safety
+
+    query = f"INSERT INTO `{table_name}` ({columns_str}) VALUES ({placeholders_str});"
+    return query, values
 
 # Example usage:
-table = "users"
-user_data = {
-    "username": "john_doe",
-    "email": "john@example.com",
-    "age": 30
-}
+table_name = 'users'
+columns = ['name', 'email', 'age']
+values = ['John Doe', 'john@example.com', 30]
 
-insert_query = generate_insert_query(table, user_data)
-print(insert_query)
+query, params = create_insert_query(table_name, columns, values)
+print(query)
+print(params)

@@ -1,9 +1,10 @@
 import os
 
-def write_to_file(location, filename, code_blocks):
+def write_to_file(location, filename, language, code_blocks):
     if not os.path.exists(location):
         os.makedirs(location)
 
-    with open(f"{location}{filename}", "w") as f:
+    file_ending = "py" if language == "python" else "js"
+    with open(f"{location}{filename}.{file_ending}", "w") as f:
         for code in code_blocks:
             f.write(code.strip())
