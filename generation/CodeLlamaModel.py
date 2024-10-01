@@ -30,7 +30,7 @@ class CodeLlamaModel(ModelGenerator):
         for seq in response:
             print(f"Result: {seq['generated_text']}")
 
-        return "a"
+        return response[0]["generated_text"]
 
     def extract_code(self, task, content) -> list:
-        return ["b"]
+        return content
