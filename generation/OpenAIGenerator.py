@@ -34,7 +34,7 @@ class OpenAIGenerator(ModelGenerator):
             ],
             model=self.model,
         )
-        print(response)
+        #print(response)
         return response.choices[0].message.content
 
     def extract_code(self, task: EvalTask, content) -> list:

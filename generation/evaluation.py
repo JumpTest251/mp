@@ -1,6 +1,7 @@
 from EvalDataset import EvalDataset
 from generation.ModelGenerator import ModelGenerator
 from utils.code_utils import write_to_file
+from tqdm import tqdm
 
 class Prompter:
     def prompt_model(self, model, prompt):
@@ -17,11 +18,12 @@ class Evaluator:
     def run_evaluation(self, n = 1):
         self.data.load_data()
         tasks = self.data.tasks()
-        for task in tasks:
+        for task in tqdm(tasks):
             for i in range(n):
                 content = self.prompter.prompt_model(self.model, task)
                 code = self.model.extract_code(task, content)
-                output_location = f"{self.output_path}/{self.name}/{task.id}/"
+                #output_location = f"{self.output_path}/{self.name}/{task.id}/"
+                output_location = f"{self.output_path}/{task.id}/"
                 write_to_file(output_location, i, task.language, code)
 
 
