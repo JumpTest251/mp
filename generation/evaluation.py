@@ -8,9 +8,13 @@ class Prompter:
         return model.generate(prompt)
 
 class Evaluator:
-    def __init__(self, model: ModelGenerator, prompter: Prompter, name="defaults", output_path = "output/"):
+    def __init__(self, model: ModelGenerator, prompter: Prompter, name="defaults", output_path = "output/", data = None):
         self.model = model
-        self.data = EvalDataset()
+        if data:
+            self.data = data
+        else:
+            self.data = EvalDataset()
+
         self.name = name
         self.output_path = output_path
         self.prompter = prompter

@@ -1,14 +1,16 @@
 import json
 import pandas as pd
 
+
 class EvalTask:
     def __init__(self, task):
         self.prompt = task["prompt"]
         self.id = task["taskId"]
         self.language = task["language"]
 
+
 class EvalDataset:
-    def __init__(self, path = "data/dataset.json"):
+    def __init__(self, path="data/dataset.json"):
         self.path = path
         self.data = []
 
@@ -26,11 +28,12 @@ class EvalDataset:
         """
         return [d["prompt"] for d in self.data]
 
-    def tasks(self):
+    def tasks(self, language=None, instruct_type=None):
         """
         Return the tasks in the dataset
         """
-        return [EvalTask(d) for d in self.data]
+        return [EvalTask(d) for d in self.data if (language is None or d["language"] == language) and (
+                instruct_type is None or d["instructType"] == instruct_type)]
 
     def to_pd(self):
         """
