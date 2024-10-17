@@ -10,9 +10,10 @@ class EvalTask:
 
 
 class EvalDataset:
-    def __init__(self, path="data/dataset.json"):
+    def __init__(self, path="data/dataset.json", data=None):
+        if data is None:
+            self.data = []
         self.path = path
-        self.data = []
 
     def load_data(self):
         """
@@ -28,12 +29,19 @@ class EvalDataset:
         """
         return [d["prompt"] for d in self.data]
 
-    def tasks(self, language=None, instruct_type=None):
+    def tasks(self):
         """
         Return the tasks in the dataset
         """
-        return [EvalTask(d) for d in self.data if (language is None or d["language"] == language) and (
+        return [EvalTask(d) for d in self.data]
+
+    def data(self, language=None, instruct_type=None):
+        """
+        Filter the dataset by language and instruction type
+        """
+        self.data = [d for d in self.data if (language is None or d["language"] == language) and (
                 instruct_type is None or d["instructType"] == instruct_type)]
+        return self
 
     def to_pd(self):
         """
