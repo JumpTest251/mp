@@ -14,14 +14,14 @@ class Evaluator:
             self.data = data
         else:
             self.data = EvalDataset()
+            self.data.load_data()
 
         self.name = name
         self.output_path = output_path
         self.prompter = prompter
 
     def run_evaluation(self, n = 1):
-        self.data.load_data()
-        tasks = self.data.tasks()
+        tasks = self.data.filter(language="python").tasks()
         for task in tqdm(tasks):
             for i in range(n):
                 content = self.prompter.prompt_model(self.model, task)

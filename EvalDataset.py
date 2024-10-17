@@ -7,6 +7,10 @@ class EvalTask:
         self.prompt = task["prompt"]
         self.id = task["taskId"]
         self.language = task["language"]
+        self.type = task["type"]
+
+    def __str__(self):
+        return f"Task ID: {self.id}, Prompt: {self.prompt}, Language: {self.language}"
 
 
 class EvalDataset:
@@ -35,12 +39,12 @@ class EvalDataset:
         """
         return [EvalTask(d) for d in self.data]
 
-    def data(self, language=None, instruct_type=None):
+    def filter(self, language=None, instruct_type=None):
         """
         Filter the dataset by language and instruction type
         """
         self.data = [d for d in self.data if (language is None or d["language"] == language) and (
-                instruct_type is None or d["instructType"] == instruct_type)]
+                instruct_type is None or d["type"] == instruct_type)]
         return self
 
     def to_pd(self):

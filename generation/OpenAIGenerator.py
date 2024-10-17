@@ -24,6 +24,9 @@ class OpenAIGenerator(ModelGenerator):
 
     def generate(self, task: EvalTask) -> str:
         prompt = task.prompt
+        if task.type == "complete":
+            prompt = f"Complete the following code, return the full code not just your completion:\n{prompt}"
+
         response = self.client.chat.completions.create(
             messages=[
                 {"role": "system", "content": "You are a professional python programmer, only respond with code."},
@@ -34,7 +37,7 @@ class OpenAIGenerator(ModelGenerator):
             ],
             model=self.model,
         )
-        #print(response)
+        #print(response.choices[0].message.content)
         return response.choices[0].message.content
 
     def extract_code(self, task: EvalTask, content) -> list:
