@@ -1,0 +1,824 @@
+{
+  "critical": [
+    {
+      "cwe_ids": [
+        "798"
+      ],
+      "id": "javascript_lang_hardcoded_secret",
+      "title": "Usage of hard-coded secret",
+      "description": "## Description\n\nStoring secrets directly in your code is a security risk. Instead, opt for environment variables or a secret management system to safeguard your secrets.\n\n## Remediations\n\n- **Do not** store plaintext secrets in your code. This exposes sensitive information to unnecessary risk.\n  ```javascript\n    passport.use(new OAuth2Strategy({\n        authorizationURL: 'https://www.example.com/oauth2/authorize',\n        tokenURL: 'https://www.example.com/oauth2/token',\n        clientID: 'my-id-123',\n        clientSecret: 'shh-my-secret',\n        callbackURL: 'http://localhost:3000/auth/example/callback'\n      },\n      function(accessToken, refreshToken, profile, cb) {\n        User.findOrCreate({ exampleId: profile.id }, function (err, user) {\n          return cb(err, user);\n        });\n      }\n    ));\n  ```\n- **Do** use environment variables to store sensitive information such as secrets. This method keeps credentials out of your codebase and makes them easier to manage securely.\n- **Do** consider implementing a key-management system to securely handle secrets and other sensitive information. This approach provides enhanced security measures for managing and accessing credentials.\n\n## References\n\n- [OWASP hardcoded passwords](https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_password)\n- [Google Cloud Key Management Service](https://cloud.google.com/kms/docs)\n- [AWS Key Management Service](https://aws.amazon.com/kms/)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/javascript_lang_hardcoded_secret",
+      "line_number": 9,
+      "full_filename": "/tmp/scan/20/0.js",
+      "filename": "20/0.js",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 9,
+        "end": 9,
+        "column": {
+          "start": 5,
+          "end": 30
+        }
+      },
+      "sink": {
+        "start": 9,
+        "end": 9,
+        "column": {
+          "start": 5,
+          "end": 30
+        },
+        "content": ""
+      },
+      "parent_line_number": 9,
+      "fingerprint": "efb94bbfdf84773f6f2e4949a80380e1_0",
+      "old_fingerprint": "31d76bb30b092b2bc03efba6e76362ba_0",
+      "code_extract": "    password: 'your_password',"
+    },
+    {
+      "cwe_ids": [
+        "89"
+      ],
+      "id": "javascript_lang_sql_injection",
+      "title": "Unsanitized input in SQL query",
+      "description": "## Description\n\nUsing unsanitized data, such as user input or request data, or externally influenced data passed to a function, in SQL query exposes your application to SQL injection attacks. This vulnerability arises when externally controlled data is directly included in SQL statements without proper sanitation, allowing attackers to manipulate queries and access or modify data.\n\n## Remediations\n\n- **Do not** use raw SQL queries that concatenate unsanitized input directly.\n  ```javascript\n  var sqlite = new Sequelize(\"sqlite::memory:\");\n  sqlite.query(\"SELECT * FROM users WHERE ID = \" + req.params.userId); // unsafe\n  ```\n- **Do** validate all query inputs to ensure they meet expected patterns or values before using them in a query.\n  ```javascript\n  var rawId = req.params.userId\n  if !(/[0-9]+/.test(rawId)) {\n    // input is unexpected; don't make the query\n  }\n  ```\n- **Do** use prepared (or parameterized) statements for querying databases to safely include external input.\n  ```javascript\n  var sqlite = new Sequelize(\"sqlite::memory:\");\n  sqlite.query(\n    \"SELECT * FROM users WHERE ID = ?\",\n    { replacements: [req.params.userId] },\n    type: sequelize.QueryTypes.SELECT\n  )\n  ```\n\n## References\n\n- [OWASP SQL injection explained](https://owasp.org/www-community/attacks/SQL_Injection)\n- [OWASP SQL injection prevention cheat sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/javascript_lang_sql_injection",
+      "line_number": 27,
+      "full_filename": "/tmp/scan/20/0.js",
+      "filename": "20/0.js",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 27,
+        "end": 32,
+        "column": {
+          "start": 5,
+          "end": 7
+        }
+      },
+      "sink": {
+        "start": 27,
+        "end": 32,
+        "column": {
+          "start": 5,
+          "end": 7
+        },
+        "content": ""
+      },
+      "parent_line_number": 27,
+      "fingerprint": "e8a60c92a0b9ec94f23ad9fc884f4a74_0",
+      "old_fingerprint": "ba47d12eff05960d9fc7705d0c0a4146_0",
+      "code_extract": "    db.query(query, [username], (err, results) =\u003e {\n        if (err) {\n            return res.status(500).json({ error: 'Database query failed' });\n        }\n        res.json(results);\n    });"
+    },
+    {
+      "cwe_ids": [
+        "78"
+      ],
+      "id": "python_lang_os_command_injection",
+      "title": "Unsanitized user input in OS command",
+      "description": "## Description\n\nDirectly incorporating external or user-defined input into an OS command exposes the system to possible command injection attacks. This vulnerability allows attackers to execute unauthorized commands on the operating system, potentially leading to a compromise of system integrity.\n\n## Remediations\n\n- **Do not** use OS commands that include dynamic input directly. Instead, explore safer alternatives such as libraries or built-in functions that achieve the same goal without executing system commands. \n- **Do** use hardcoded values for any input that is incorporated into OS commands. This approach minimizes the risk by ensuring only predefined inputs are used, thus preventing attackers from injecting malicious commands. Use safe lists or dictionaries if you need to be dynamic. \n\n## References\n\n- [OWASP command injection explained](https://owasp.org/www-community/attacks/Command_Injection)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_os_command_injection",
+      "line_number": 7,
+      "full_filename": "/tmp/scan/5/0.py",
+      "filename": "5/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 7,
+        "end": 7,
+        "column": {
+          "start": 18,
+          "end": 100
+        }
+      },
+      "sink": {
+        "start": 7,
+        "end": 7,
+        "column": {
+          "start": 18,
+          "end": 100
+        },
+        "content": ""
+      },
+      "parent_line_number": 7,
+      "fingerprint": "756021aa471b03cfba39cc302a31ca50_0",
+      "old_fingerprint": "2640cf3e1a9ba895c2deb7d7deaee2bd_0",
+      "code_extract": "        result = subprocess.run(['ls', directory_path], capture_output=True, text=True, check=True)"
+    },
+    {
+      "cwe_ids": [
+        "78"
+      ],
+      "id": "python_lang_os_command_injection",
+      "title": "Unsanitized user input in OS command",
+      "description": "## Description\n\nDirectly incorporating external or user-defined input into an OS command exposes the system to possible command injection attacks. This vulnerability allows attackers to execute unauthorized commands on the operating system, potentially leading to a compromise of system integrity.\n\n## Remediations\n\n- **Do not** use OS commands that include dynamic input directly. Instead, explore safer alternatives such as libraries or built-in functions that achieve the same goal without executing system commands. \n- **Do** use hardcoded values for any input that is incorporated into OS commands. This approach minimizes the risk by ensuring only predefined inputs are used, thus preventing attackers from injecting malicious commands. Use safe lists or dictionaries if you need to be dynamic. \n\n## References\n\n- [OWASP command injection explained](https://owasp.org/www-community/attacks/Command_Injection)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_os_command_injection",
+      "line_number": 16,
+      "full_filename": "/tmp/scan/89/0.py",
+      "filename": "89/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 16,
+        "end": 16,
+        "column": {
+          "start": 18,
+          "end": 104
+        }
+      },
+      "sink": {
+        "start": 16,
+        "end": 16,
+        "column": {
+          "start": 18,
+          "end": 104
+        },
+        "content": ""
+      },
+      "parent_line_number": 16,
+      "fingerprint": "e6289146409f834502c685c2b8cbda1e_0",
+      "old_fingerprint": "ff8f4655336714646b4b63146ad3085d_1",
+      "code_extract": "        output = subprocess.check_output(['ping', '-c', '4', url], stderr=subprocess.STDOUT, text=True)"
+    }
+  ],
+  "high": [
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 17,
+      "full_filename": "/tmp/scan/11/0.py",
+      "filename": "11/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 17,
+        "end": 17,
+        "column": {
+          "start": 10,
+          "end": 35
+        }
+      },
+      "sink": {
+        "start": 17,
+        "end": 17,
+        "column": {
+          "start": 10,
+          "end": 35
+        },
+        "content": ""
+      },
+      "parent_line_number": 17,
+      "fingerprint": "43b47865496a61c95c6290d73124479b_0",
+      "old_fingerprint": "fbd5d99b78112ad537329e2df94ef1bb_4",
+      "code_extract": "    with open(tar_file_path, 'wb') as f:"
+    },
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 29,
+      "full_filename": "/tmp/scan/11/0.py",
+      "filename": "11/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 29,
+        "end": 29,
+        "column": {
+          "start": 9,
+          "end": 33
+        }
+      },
+      "sink": {
+        "start": 29,
+        "end": 29,
+        "column": {
+          "start": 9,
+          "end": 33
+        },
+        "content": ""
+      },
+      "parent_line_number": 29,
+      "fingerprint": "43b47865496a61c95c6290d73124479b_1",
+      "old_fingerprint": "fbd5d99b78112ad537329e2df94ef1bb_6",
+      "code_extract": "        os.remove(tar_file_path)"
+    },
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 6,
+      "full_filename": "/tmp/scan/3/0.py",
+      "filename": "3/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 6,
+        "end": 6,
+        "column": {
+          "start": 14,
+          "end": 34
+        }
+      },
+      "sink": {
+        "start": 6,
+        "end": 6,
+        "column": {
+          "start": 14,
+          "end": 34
+        },
+        "content": ""
+      },
+      "parent_line_number": 6,
+      "fingerprint": "26fc191909059e53ba0b625ed930f6d1_0",
+      "old_fingerprint": "90c14006778326f2124b7ef930d0ac1a_1",
+      "code_extract": "        with open(file_path, 'r') as file:"
+    },
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 24,
+      "full_filename": "/tmp/scan/62/0.py",
+      "filename": "62/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 24,
+        "end": 24,
+        "column": {
+          "start": 18,
+          "end": 40
+        }
+      },
+      "sink": {
+        "start": 24,
+        "end": 24,
+        "column": {
+          "start": 18,
+          "end": 40
+        },
+        "content": ""
+      },
+      "parent_line_number": 24,
+      "fingerprint": "3c22de24c84d00b1cf117c1d870e4e98_0",
+      "old_fingerprint": "7089cd3742fe3617f0980230ed966ee7_5",
+      "code_extract": "            with open(image_path, 'rb') as file:"
+    },
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 6,
+      "full_filename": "/tmp/scan/63/0.py",
+      "filename": "63/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 6,
+        "end": 6,
+        "column": {
+          "start": 10,
+          "end": 32
+        }
+      },
+      "sink": {
+        "start": 6,
+        "end": 6,
+        "column": {
+          "start": 10,
+          "end": 32
+        },
+        "content": ""
+      },
+      "parent_line_number": 6,
+      "fingerprint": "50ef55ca02d7014c560018efcb48fe43_0",
+      "old_fingerprint": "2bd18432d774a72f96320a8995d85fbf_2",
+      "code_extract": "    with open(image_path, \"rb\") as image_file:"
+    },
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 5,
+      "full_filename": "/tmp/scan/64/0.py",
+      "filename": "64/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 5,
+        "end": 5,
+        "column": {
+          "start": 10,
+          "end": 32
+        }
+      },
+      "sink": {
+        "start": 5,
+        "end": 5,
+        "column": {
+          "start": 10,
+          "end": 32
+        },
+        "content": ""
+      },
+      "parent_line_number": 5,
+      "fingerprint": "ecb3949f48c7837a8e76597d16e0b0c0_0",
+      "old_fingerprint": "c36f931801e05e632b33aeef62422e65_0",
+      "code_extract": "    with open(image_path, 'rb') as image_file:"
+    },
+    {
+      "cwe_ids": [
+        "22"
+      ],
+      "id": "python_lang_path_traversal",
+      "title": "Unsanitized dynamic input in file path",
+      "description": "## Description\n\nUsing unsanitized dynamic input to determine file paths can allow attackers to gain access to files and folders outside of the intended scope. This vulnerability occurs when input provided by users is directly used to access the filesystem without proper validation or sanitization.\n\n## Remediations\n\n- **Do not** directly use external input to construct file paths. This can lead to unauthorized file access.\n- **Do** sanitize external input used in file paths. Use `os.path.normpath` to normalize paths and remove any redundant separators in order to prevent path traversal attacks.\n  ```python\n  os.path.normpath(os.path.join(base_directory, user_input))\n  ```\n- **Do** use absolute path checks to confirm that the constructed path is within the expected directory\n    ```python\n    base = os.path.abspath(base_directory)\n    user_path = os.path.abspath(os.path.join(base_directory, user_input))\n    if user_path.startswith(base)\n      # Handle or reject the input\n   ```\n\n## References\n\n- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)\n",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_path_traversal",
+      "line_number": 10,
+      "full_filename": "/tmp/scan/64/0.py",
+      "filename": "64/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 10,
+        "end": 10,
+        "column": {
+          "start": 10,
+          "end": 32
+        }
+      },
+      "sink": {
+        "start": 10,
+        "end": 10,
+        "column": {
+          "start": 10,
+          "end": 32
+        },
+        "content": ""
+      },
+      "parent_line_number": 10,
+      "fingerprint": "ecb3949f48c7837a8e76597d16e0b0c0_1",
+      "old_fingerprint": "c36f931801e05e632b33aeef62422e65_3",
+      "code_extract": "    with open(output_file, 'w') as file:"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 17,
+      "full_filename": "/tmp/scan/25/0.py",
+      "filename": "25/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 17,
+        "end": 17,
+        "column": {
+          "start": 9,
+          "end": 29
+        }
+      },
+      "sink": {
+        "start": 17,
+        "end": 17,
+        "column": {
+          "start": 9,
+          "end": 29
+        },
+        "content": ""
+      },
+      "parent_line_number": 17,
+      "fingerprint": "0f6cd89e45587479e281bac2945e9832_0",
+      "old_fingerprint": "d96fc098edbcd2bba052980e0636e8f5_1",
+      "code_extract": "        random.choice(lower),"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 18,
+      "full_filename": "/tmp/scan/25/0.py",
+      "filename": "25/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 18,
+        "end": 18,
+        "column": {
+          "start": 9,
+          "end": 29
+        }
+      },
+      "sink": {
+        "start": 18,
+        "end": 18,
+        "column": {
+          "start": 9,
+          "end": 29
+        },
+        "content": ""
+      },
+      "parent_line_number": 18,
+      "fingerprint": "0f6cd89e45587479e281bac2945e9832_1",
+      "old_fingerprint": "d96fc098edbcd2bba052980e0636e8f5_2",
+      "code_extract": "        random.choice(upper),"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 19,
+      "full_filename": "/tmp/scan/25/0.py",
+      "filename": "25/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 19,
+        "end": 19,
+        "column": {
+          "start": 9,
+          "end": 30
+        }
+      },
+      "sink": {
+        "start": 19,
+        "end": 19,
+        "column": {
+          "start": 9,
+          "end": 30
+        },
+        "content": ""
+      },
+      "parent_line_number": 19,
+      "fingerprint": "0f6cd89e45587479e281bac2945e9832_2",
+      "old_fingerprint": "d96fc098edbcd2bba052980e0636e8f5_3",
+      "code_extract": "        random.choice(digits),"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 20,
+      "full_filename": "/tmp/scan/25/0.py",
+      "filename": "25/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 20,
+        "end": 20,
+        "column": {
+          "start": 9,
+          "end": 31
+        }
+      },
+      "sink": {
+        "start": 20,
+        "end": 20,
+        "column": {
+          "start": 9,
+          "end": 31
+        },
+        "content": ""
+      },
+      "parent_line_number": 20,
+      "fingerprint": "0f6cd89e45587479e281bac2945e9832_3",
+      "old_fingerprint": "d96fc098edbcd2bba052980e0636e8f5_4",
+      "code_extract": "        random.choice(symbols)"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 26,
+      "full_filename": "/tmp/scan/25/0.py",
+      "filename": "25/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 26,
+        "end": 26,
+        "column": {
+          "start": 21,
+          "end": 65
+        }
+      },
+      "sink": {
+        "start": 26,
+        "end": 26,
+        "column": {
+          "start": 21,
+          "end": 65
+        },
+        "content": ""
+      },
+      "parent_line_number": 26,
+      "fingerprint": "0f6cd89e45587479e281bac2945e9832_4",
+      "old_fingerprint": "d96fc098edbcd2bba052980e0636e8f5_5",
+      "code_extract": "        password += random.choices(all_characters, k=length - 4)"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 29,
+      "full_filename": "/tmp/scan/25/0.py",
+      "filename": "25/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 29,
+        "end": 29,
+        "column": {
+          "start": 5,
+          "end": 29
+        }
+      },
+      "sink": {
+        "start": 29,
+        "end": 29,
+        "column": {
+          "start": 5,
+          "end": 29
+        },
+        "content": ""
+      },
+      "parent_line_number": 29,
+      "fingerprint": "0f6cd89e45587479e281bac2945e9832_5",
+      "old_fingerprint": "d96fc098edbcd2bba052980e0636e8f5_6",
+      "code_extract": "    random.shuffle(password)"
+    },
+    {
+      "cwe_ids": [
+        "327"
+      ],
+      "id": "python_lang_weak_random",
+      "title": "Usage of weak Pseudo-Random Number Generator (PRNG)",
+      "description": "## Description\n\nThe `random` module in Python generates pseudorandom numbers that are not secure for cryptographic purposes. These numbers can be predicted if the seed is known, posing a risk to the security of applications that use them for generating secrets, tokens, or other security-sensitive elements.\n\n## Remediations\n\n- **Do** use `secrets` instead of `random` for generating random numbers in contexts where security is crucial. This ensures the randomness is cryptographically secure and unpredictable.\n- **Do not** use `random` for generating random numbers in cryptographic applications, including but not limited to key generation, authentication tokens, or security challenges.\n- **Do not** initialize `random` with predictable seeds, such as timestamps or other easily guessable values, if it is required to use `random`.\n\n## References\n\n- [secrets module documentation](https://docs.python.org/3/library/secrets.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/python_lang_weak_random",
+      "line_number": 9,
+      "full_filename": "/tmp/scan/29/0.py",
+      "filename": "29/0.py",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 9,
+        "end": 9,
+        "column": {
+          "start": 19,
+          "end": 40
+        }
+      },
+      "sink": {
+        "start": 9,
+        "end": 9,
+        "column": {
+          "start": 19,
+          "end": 40
+        },
+        "content": ""
+      },
+      "parent_line_number": 9,
+      "fingerprint": "6491a3078b29eb6b18281789159cbf94_0",
+      "old_fingerprint": "7c9a2fac5d28fdea91ed2f05480a1572_0",
+      "code_extract": "    otp = ''.join(random.choice(digits) for _ in range(length))"
+    }
+  ],
+  "low": [
+    {
+      "cwe_ids": [
+        "532"
+      ],
+      "id": "javascript_lang_logger_leak",
+      "title": "Leakage of information in logger message",
+      "description": "## Description\n\nInformation leakage through logger messages can compromise sensitive data. This vulnerability arises when dynamic data or variables, which may contain sensitive information, are included in log messages.\n\n## Remediations\n\n- **Do not** include sensitive data directly in logger messages. This can lead to the exposure of such data in log files, which might be accessible to unauthorized individuals.\n  ```javascript\n  logger.info(`Results: ${data}`) // unsafe\n  ```\n- **Do** use logging levels appropriately to control the verbosity of log output and minimize the risk of leaking sensitive information in production environments.",
+      "documentation_url": "https://docs.bearer.com/reference/rules/javascript_lang_logger_leak",
+      "line_number": 16,
+      "full_filename": "/tmp/scan/20/0.js",
+      "filename": "20/0.js",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 16,
+        "end": 16,
+        "column": {
+          "start": 9,
+          "end": 66
+        }
+      },
+      "sink": {
+        "start": 16,
+        "end": 16,
+        "column": {
+          "start": 9,
+          "end": 66
+        },
+        "content": ""
+      },
+      "parent_line_number": 16,
+      "fingerprint": "9fb980347df99b7ab211cbb93a698d36_0",
+      "old_fingerprint": "549cfda15dc1a26350a5822f1e079bb4_0",
+      "code_extract": "        console.error('Database connection failed: ' + err.stack);"
+    },
+    {
+      "cwe_ids": [
+        "532"
+      ],
+      "id": "javascript_lang_logger_leak",
+      "title": "Leakage of information in logger message",
+      "description": "## Description\n\nInformation leakage through logger messages can compromise sensitive data. This vulnerability arises when dynamic data or variables, which may contain sensitive information, are included in log messages.\n\n## Remediations\n\n- **Do not** include sensitive data directly in logger messages. This can lead to the exposure of such data in log files, which might be accessible to unauthorized individuals.\n  ```javascript\n  logger.info(`Results: ${data}`) // unsafe\n  ```\n- **Do** use logging levels appropriately to control the verbosity of log output and minimize the risk of leaking sensitive information in production environments.",
+      "documentation_url": "https://docs.bearer.com/reference/rules/javascript_lang_logger_leak",
+      "line_number": 38,
+      "full_filename": "/tmp/scan/20/0.js",
+      "filename": "20/0.js",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 38,
+        "end": 38,
+        "column": {
+          "start": 5,
+          "end": 53
+        }
+      },
+      "sink": {
+        "start": 38,
+        "end": 38,
+        "column": {
+          "start": 5,
+          "end": 53
+        },
+        "content": ""
+      },
+      "parent_line_number": 38,
+      "fingerprint": "9fb980347df99b7ab211cbb93a698d36_1",
+      "old_fingerprint": "549cfda15dc1a26350a5822f1e079bb4_1",
+      "code_extract": "    console.log(`Server is running on port ${PORT}`);"
+    }
+  ],
+  "medium": [
+    {
+      "cwe_ids": [
+        "693"
+      ],
+      "id": "javascript_express_helmet_missing",
+      "title": "Missing Helmet configuration on HTTP headers",
+      "description": "## Description\n\nHelmet can help protect your app from some well-known web vulnerabilities by setting HTTP headers appropriately. Failing to configure Helmet for HTTP headers leaves your application vulnerable to several web attacks.\n\n## Remediations\n\n- **Do** use Helmet middleware to secure your app by adding it to your application's middleware.\n  ```javascript\n  const helmet = require(\"helmet\");\n  app.use(helmet());\n  ```\n\n## References\n\n- [Express Security Best Practices: Use Helmet](https://expressjs.com/en/advanced/best-practice-security.html#use-helmet)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/javascript_express_helmet_missing",
+      "line_number": 3,
+      "full_filename": "/tmp/scan/20/0.js",
+      "filename": "20/0.js",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 3,
+        "end": 3,
+        "column": {
+          "start": 13,
+          "end": 22
+        }
+      },
+      "sink": {
+        "start": 3,
+        "end": 3,
+        "column": {
+          "start": 13,
+          "end": 22
+        },
+        "content": ""
+      },
+      "parent_line_number": 3,
+      "fingerprint": "37eea1ef0d4a623f4cbe17d4b9717e91_0",
+      "old_fingerprint": "b27e0fc18aaf78f15cc582b5ec22cfcf_0",
+      "code_extract": "const app = express();"
+    },
+    {
+      "cwe_ids": [
+        "693"
+      ],
+      "id": "javascript_express_reduce_fingerprint",
+      "title": "Missing server configuration to reduce server fingerprinting",
+      "description": "## Description\n\nReducing server fingerprinting enhances security by making it harder for attackers to identify the software your server is running. Server fingerprinting involves analyzing the unique responses of server software to specific requests, which can reveal information about the server's software and version. While not a direct security vulnerability, minimizing this information leakage is a proactive step to obscure details that could be used in targeted attacks.\n\n## Remediations\n\n- **Do** disable the `X-Powered-By` header in Express.js applications to prevent revealing the server's technology stack. Use the `app.disable()` method to achieve this.\n  ```javascript\n  app.disable('x-powered-by');\n  ```\n\n## References\n\n- [Express Security Best Practices](https://expressjs.com/en/advanced/best-practice-security.html)",
+      "documentation_url": "https://docs.bearer.com/reference/rules/javascript_express_reduce_fingerprint",
+      "line_number": 3,
+      "full_filename": "/tmp/scan/20/0.js",
+      "filename": "20/0.js",
+      "category_groups": [
+        "PII",
+        "Personal Data"
+      ],
+      "source": {
+        "start": 3,
+        "end": 3,
+        "column": {
+          "start": 13,
+          "end": 22
+        }
+      },
+      "sink": {
+        "start": 3,
+        "end": 3,
+        "column": {
+          "start": 13,
+          "end": 22
+        },
+        "content": ""
+      },
+      "parent_line_number": 3,
+      "fingerprint": "543a27c1e96a0ca5f0461201e5acc933_0",
+      "old_fingerprint": "53ef062152af14a9ce55bfdf918fee09_0",
+      "code_extract": "const app = express();"
+    }
+  ]
+}
