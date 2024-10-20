@@ -12,6 +12,9 @@ auto/AutoGPT-0.4.7
 auto/AutoGPT-master
 auto/AutoGPT-master-old
 
+codeql-python/
+codeql-js/
+
 .env
 .vscode
 aufgaben/.idea
